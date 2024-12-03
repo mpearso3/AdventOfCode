@@ -90,7 +90,7 @@ class Day2Solver:
 
         levels = self.get_levels(lines)
         num_safe = self.check_levels_as_safe(levels)
-        print(f"num_safe: {num_safe}")
+        print(f"{in_file_name}: num_safe: {num_safe}")
 
     def solve_part_2(self, in_file_name):
         f = open(in_file_name, 'r')
@@ -99,12 +99,17 @@ class Day2Solver:
 
         levels = self.get_levels(lines)
         num_safe = self.check_levels_as_safe_with_dampener(levels)
-        print(f"num_safe: {num_safe}")
+        print(f"{in_file_name}: num_safe: {num_safe}")
 
 
 def main():
     '''
-    Example input:
+    Correct answers:
+
+    input_simple_1.txt: num_safe: 2
+    input.txt: num_safe: 510
+    input_simple_1.txt: num_safe: 4
+    input.txt: num_safe: 553
     '''
 
     day2Solver = Day2Solver()
@@ -112,7 +117,7 @@ def main():
     day2Solver.solve_part_1("input_simple_1.txt")
     day2Solver.solve_part_1("input.txt")
 
-    # day2Solver.solve_part_2("input_simple_1.txt")
+    day2Solver.solve_part_2("input_simple_1.txt")
     day2Solver.solve_part_2("input.txt")
 
 if __name__ == "__main__":
