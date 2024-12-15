@@ -103,31 +103,81 @@ class Day12Solver:
 
         return perimeter
 
-    def calculate_sides(self, garden, plots, item):
-        sorted_plots = sorted(plots)
+    def get_direction_coordinates(self, direction, r, c):
+        if direction == 'up':
+            return (r - 1, c)
+        elif direction == 'down':
+            return (r + 1, c)
+        elif direction == 'left':
+            return (r, c - 1)
+        elif direction == 'right':
+            return (r, c + 1)
 
-        sides = set()
+    def swap_row_and_column(self, plots):
+        swap_x_and_y = list()
         for plot in plots:
+            x = plot[0]
+            y = plot[1]
+
+            swap = (y, x)
+            swap_x_and_y.append(swap)
+        return swap_x_and_y
+
+    def column_sorted(self, plots):
+        swap_r_and_c = self.swap_row_and_column(plots)
+        sorted_c = sorted(swap_r_and_c)
+        swap_r_and_c = self.swap_row_and_column(sorted_c)
+        return swap_r_and_c
+
+    def check_continuous_coordinate(self, continuous, direction, previous, current):
+        if direction == 'up' or direction == 'down':
+            if previous != (current[0], current[1] - 1):
+                continuous = False
+        elif direction == 'right' or direction == 'left':
+            if previous != (current[0] - 1, current[1]):
+                continuous = False
+        return continuous
+
+    def find_sides(self, sorted_plots, sides, direction):
+        num_sides = 0
+        continuous = False
+        
+        previous_coordinate = None
+        for plot in sorted_plots:
             r = plot[0]
             c = plot[1]
 
-            if (r - 1, c    ) not in plots:
-                if (r, r - 1, None, None) not in sides:
-                    sides.add( (r, r - 1, None, None) )
+            coordinate = self.get_direction_coordinates(direction, r, c)
+            if coordinate not in sorted_plots:
+                continuous = self.check_continuous_coordinate(continuous, direction, previous_coordinate, plot)
+                    
+                if continuous == False:
+                    continuous = True
+                    sides.add((r, coordinate[0], coordinate[1], None))
+                    num_sides += 1
+            else:
+                continuous = False
 
-            if (r + 1, c    ) not in plots:
-                if (r, r + 1, None, None) not in sides:
-                    sides.add( (r, r + 1, None, None) )
+            previous_coordinate = plot
 
-            if (r    , c - 1) not in plots:
-                if (None, None, c, c - 1) not in sides:
-                    sides.add( (None, None, c, c - 1) )
+        # print(f"  {direction} sides: {num_sides}")
+        return num_sides
 
-            if (r    , c + 1) not in plots:
-                if (None, None, c, c + 1) not in sides:
-                    sides.add( (None, None, c, c + 1) )
+    def calculate_sides(self, garden, plots, item):
+        sides = set()
+        num_sides = 0
 
-        return len(sides)
+        sorted_plots = sorted(plots)
+        num_sides += self.find_sides(sorted_plots, sides, 'up'   )
+        num_sides += self.find_sides(sorted_plots, sides, 'down' )
+
+        sorted_plots = self.column_sorted(plots)
+        num_sides += self.find_sides(sorted_plots, sides, 'right')
+        num_sides += self.find_sides(sorted_plots, sides, 'left' )
+
+        # print(f"{item}: sides: {len(sides)}")
+        # print(f"{item}: num_sides: {num_sides}")
+        return num_sides
 
     def calculate_area_perimter_price(self, garden_plots):
         price = 0
@@ -176,10 +226,12 @@ def main():
     day12Solver.solve_part_1("input_simple_2.txt") # 772 expected
     day12Solver.solve_part_1("input.txt")
 
-    # day12Solver.solve_part_2("input_simple_1.txt") # 80  expected
+    day12Solver.solve_part_2("input_simple_1.txt") # 80  expected
     day12Solver.solve_part_2("input_simple_2.txt") # 436 expected
     day12Solver.solve_part_2("input_simple_3.txt") # 236 expected
     day12Solver.solve_part_2("input_simple_4.txt") # 368 expected
+    day12Solver.solve_part_2("input_simple_5.txt") # 1206 expected
+    day12Solver.solve_part_2("input.txt")
 
 if __name__ == "__main__":
     main()
