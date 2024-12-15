@@ -85,51 +85,11 @@ class Day5Solver:
         return invalid_update_lines
 
     def create_valid_lines(self, forward_rules, reverse_rules, invalid_update_lines):
-        '''
-        1 2 3 4 5 6
-
-        2 1 3 4 5 6
-        2 3 1 4 5 6
-        2 3 4 1 5 6
-        2 3 4 5 1 6
-        2 3 4 5 6 1
-
-        3 2 4 5 6 1
-        3 4 2 5 6 1
-        3 4 5 2 6 1
-        3 4 5 6 2 1
-        3 4 5 6 1 2
-        '''
-        # valid_update_lines = []
-
-        # for invalid_update_line in invalid_update_lines:
-        #     valid_found = False
-        #     copy_invalid_line = list(invalid_update_line)
-
-        #     print(f'\n{invalid_update_line}')
-        #     while valid_found == False:
-
-        #         print('')
-        #         # for i in range(len(invalid_update_line) - 1):
-        #         for i in range(1, len(invalid_update_line)):
-        #             j = 0
-        #             copy_invalid_line[i], copy_invalid_line[j] = copy_invalid_line[j], copy_invalid_line[i]
-        #             print(copy_invalid_line)
-
-        #             valid_lines = self.get_valid_update_lines(forward_rules, reverse_rules, [copy_invalid_line])
-        #             if len(valid_lines) > 0:
-        #                 valid_found = True 
-        #                 valid_update_lines.append(list(valid_lines[0]))
-        #                 break
-
-        # return valid_update_lines
-
         valid_update_lines = []
 
         for invalid_update_line in invalid_update_lines:
             valid_found = False
             copy_invalid_line = list(invalid_update_line)
-            # print(f"\n{copy_invalid_line}")
 
             while valid_found == False:
                 for i in range(len(invalid_update_line) - 1):
@@ -142,14 +102,12 @@ class Day5Solver:
                         if rule_j in forward_rules[rule_i]:
                             continue
                     copy_invalid_line[i], copy_invalid_line[j] = copy_invalid_line[j], copy_invalid_line[i]
-                    # print(f"{copy_invalid_line}")
 
                     valid_lines = self.get_valid_update_lines(forward_rules, reverse_rules, [copy_invalid_line])
                     if len(valid_lines) > 0:
                         valid_found = True 
                         valid_update_lines.append(list(valid_lines[0]))
                         break
-                    
 
         return valid_update_lines
 
