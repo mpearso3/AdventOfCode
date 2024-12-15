@@ -103,8 +103,31 @@ class Day12Solver:
 
         return perimeter
 
-    def calculate_sides(self, plots):
-        pass
+    def calculate_sides(self, garden, plots, item):
+        sorted_plots = sorted(plots)
+
+        sides = set()
+        for plot in plots:
+            r = plot[0]
+            c = plot[1]
+
+            if (r - 1, c    ) not in plots:
+                if (r, r - 1, None, None) not in sides:
+                    sides.add( (r, r - 1, None, None) )
+
+            if (r + 1, c    ) not in plots:
+                if (r, r + 1, None, None) not in sides:
+                    sides.add( (r, r + 1, None, None) )
+
+            if (r    , c - 1) not in plots:
+                if (None, None, c, c - 1) not in sides:
+                    sides.add( (None, None, c, c - 1) )
+
+            if (r    , c + 1) not in plots:
+                if (None, None, c, c + 1) not in sides:
+                    sides.add( (None, None, c, c + 1) )
+
+        return len(sides)
 
     def calculate_area_perimter_price(self, garden_plots):
         price = 0
@@ -116,12 +139,12 @@ class Day12Solver:
         
         return price
 
-    def calculate_area_side_price(self, garden_plots):
+    def calculate_area_side_price(self, garden, garden_plots):
         price = 0
         for item in garden_plots:
             for plots in garden_plots[item]:
                 area = self.calculate_area(plots)
-                sides = self.calculate_sides(plots)
+                sides = self.calculate_sides(garden, plots, item)
                 price += (area * sides)
         
         return price
@@ -142,18 +165,21 @@ class Day12Solver:
         garden = self.extract_garden(in_file_name)
 
         garden_plots = self.extract_garden_plots(garden)
-        price = self.calculate_area_side_price(garden_plots)
+        price = self.calculate_area_side_price(garden, garden_plots)
 
         print(f"{in_file_name} price {price}")
 
 def main():
     day12Solver = Day12Solver()
 
-    day12Solver.solve_part_1("input_simple_1.txt")
-    day12Solver.solve_part_1("input_simple_2.txt")
+    day12Solver.solve_part_1("input_simple_1.txt") # 140 expected
+    day12Solver.solve_part_1("input_simple_2.txt") # 772 expected
     day12Solver.solve_part_1("input.txt")
 
-    day12Solver.solve_part_2("input_simple_1.txt")
+    # day12Solver.solve_part_2("input_simple_1.txt") # 80  expected
+    day12Solver.solve_part_2("input_simple_2.txt") # 436 expected
+    day12Solver.solve_part_2("input_simple_3.txt") # 236 expected
+    day12Solver.solve_part_2("input_simple_4.txt") # 368 expected
 
 if __name__ == "__main__":
     main()
